@@ -1,41 +1,45 @@
 <?php
 require_once './Models/Users.php';
 
-class UserController {
+class UserController
+{
 
-    public function register() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['pseudo'] ?? null;
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            $confirm = $_POST['confirm'];
-
-            if( empty($username) || empty($email) || empty($_POST['password']) || $_POST['password'] !== $_POST['confirm']) {
-                $error = "Veuillez remplir tous les champs correctement.";
-                return;
-            }
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $error = "Adresse email invalide.";
-                return;
-            }
-            if($password !== $confirm) {
-                $error = "Les mots de passe ne correspondent pas.";
-                return;
-            }
-
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-            if (User::create($username, $email, $password)) {
-                header("Location: index.php?action=login");
-                exit;
-            } else {
-                $error = "Erreur lors de l'inscription.";
-            }
+    public function register()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            require 'views/register.php';
         }
-        require 'views/register.php';
+
+        $username = $_POST['pseudo'] ?? null;
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $confirm = $_POST['confirm'];
+
+        if (empty($username) || empty($email) || empty($_POST['password']) || $_POST['password'] !== $_POST['confirm']) {
+            $error = "Veuillez remplir tous les champs correctement.";
+            return;
+        }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = "Adresse email invalide.";
+            return;
+        }
+        if ($password !== $confirm) {
+            $error = "Les mots de passe ne correspondent pas.";
+            return;
+        }
+
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+        if (User::create($username, $email, $password)) {
+            header("Location: index.php?action=login");
+            exit;
+        } else {
+            $error = "Erreur lors de l'inscription.";
+        }
     }
 
-    public function login() {
+    public function login()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (empty(trim($_POST['email'])) || empty(trim($_POST['password']))) {
@@ -59,7 +63,8 @@ class UserController {
         require 'views/login.php';
     }
 
-    public function profile() {
+    public function profile()
+    {
         if (!isset($_SESSION['user_id'])) {
             header("Location: index.php?action=login");
             exit;
@@ -73,20 +78,18 @@ class UserController {
             $password = $_POST['password'];
             $newPawd = $_POST['new-password'];
 
-            if(!password_verify($password, $user['password'])) {
+            if (!password_verify($password, $user['password'])) {
                 $error = "mot de passe incorrect";
-            }else {
+            } else {
                 $password = empty($newPawd) ? password_hash($password, PASSWORD_DEFAULT) : password_hash($newPawd, PASSWORD_DEFAULT);
-                
-                if (User::updateProfile($user['id'], $username, $email, $password)) { 
+
+                if (User::updateProfile($user['id'], $username, $email, $password)) {
                     header("Location: index.php?action=profile");
                     exit;
                 } else {
                     $error = "Erreur lors de la mise à jour.";
                 }
             }
-
-            
         }
 
         require 'views/profile.php';
