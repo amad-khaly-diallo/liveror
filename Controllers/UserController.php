@@ -11,9 +11,9 @@ class UserController
         }
 
         $username = $_POST['pseudo'] ?? null;
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $confirm = $_POST['confirm'];
+        $email = $_POST['email'] ?? null;
+        $password = $_POST['password'] ?? null;
+        $confirm = $_POST['confirm'] ?? null;
 
         if (empty($username) || empty($email) || empty($_POST['password']) || $_POST['password'] !== $_POST['confirm']) {
             $error = "Veuillez remplir tous les champs correctement.";
@@ -48,7 +48,7 @@ class UserController
             }
 
             $email = $_POST['email'] ?? null;
-            $password = $_POST['password'];
+            $password = $_POST['password'] ?? null;
 
             $user = User::findByEmail($email);
 
@@ -73,10 +73,10 @@ class UserController
         $user = User::findById($_SESSION['user_id']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['pseudo'];
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            $newPawd = $_POST['new-password'];
+            $username = $_POST['pseudo'] ?? null;
+            $email = $_POST['email'] ?? null;
+            $password = $_POST['password'] ?? null;
+            $newPawd = $_POST['new-password'] ?? null;
 
             if (!password_verify($password, $user['password'])) {
                 $error = "mot de passe incorrect";
