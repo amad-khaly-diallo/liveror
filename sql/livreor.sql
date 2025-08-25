@@ -31,7 +31,7 @@ CREATE TABLE `commentaires` (
   `id` int NOT NULL,
   `commentaire` text COLLATE utf8mb4_general_ci NOT NULL,
   `id_utilisateur` int NOT NULL,
-  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
